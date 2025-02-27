@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifica Link Sicuro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 15px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Verifica Link Sicuro</h1>
+<p>Incolla un link qui sotto per verificarne la sicurezza:</p>
+<input type="text" id="urlInput" placeholder="Inserisci il link qui">
+<button id="checkButton">Verifica</button>
+
+<div id="result"></div>
+
+<script>
+    document.getElementById('checkButton').addEventListener('click', function() {
+        const url = document.getElementById('urlInput').value;
+        const resultDiv = document.getElementById('result');
+
+        // Controlla se l'input è vuoto
+        if (!url) {
+            resultDiv.innerHTML = 'Per favore, inserisci un link.';
+            return;
+        }
+
+        // Esegui la richiesta all'API di sicurezza (sostituisci con la tua API)
+        fetch(`https://api.example.com/verify?url=${encodeURIComponent(url)}`)
+            .then(response => response.json())
+            .then(data => {
+                // Gestisci la risposta dell'API
+                if (data.isSafe) {
+                    resultDiv.innerHTML = 'Il link è sicuro!';
+                } else {
+                    resultDiv.innerHTML = 'Attenzione! Il link potrebbe essere pericoloso.';
+                }
+            })
+            .catch(error => {
+                console.error('Errore:', error);
+                resultDiv.innerHTML = 'Si è verificato un errore durante la verifica del link.';
+            });
+    });
+</script>
+
+</body>
+</html>
