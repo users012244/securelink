@@ -47,21 +47,46 @@
             return;
         }
 
-        // Esegui la richiesta all'API di sicurezza (sostituisci con la tua API)
-        fetch(`https://api.example.com/verify?url=${encodeURIComponent(url)}`)
-            .then(response => response.json())
-            .then(data => {
-                // Gestisci la risposta dell'API
-                if (data.isSafe) {
-                    resultDiv.innerHTML = 'Il link è sicuro!';
-                } else {
-                    resultDiv.innerHTML = 'Attenzione! Il link potrebbe essere pericoloso.';
-                }
-            })
-            .catch(error => {
-                console.error('Errore:', error);
-                resultDiv.innerHTML = 'Si è verificato un errore durante la verifica del link.';
-            });
+        // La tua chiave API di Google Safe Browsing
+        const apiKey = 'LA_TUA_CHIAVE_API'; // Sostituisci con la tua chiave API
+
+        // Costruisci la richiesta per l'API di Google Safe Browsing
+        const requestBody = {
+            client: {
+                clientId: "tuoNomeAzienda",
+                clientVersion: "1.5.2"
+            },
+            threatInfo: {
+                threatTypes: ["MALWARE", "SOCIAL_ENGINEERING"],
+                platformTypes: ["ANY_PLATFORM"],
+                threatEntryTypes: ["URL"],
+                threatEntries: [
+                    { url: url }
+                ]
+            }
+        };
+
+        // Esegui la richiesta all'API di Google Safe Browsing
+        fetch(`https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Gestisci la risposta dell'API
+            if (data.matches) {
+                resultDiv.innerHTML = 'Attenzione! Il link potrebbe essere pericoloso.';
+            } else {
+                resultDiv.innerHTML = 'Il link è sicuro!';
+            }
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+            resultDiv.innerHTML = 'Si è verificato un errore durante la verifica del link.';
+        });
     });
 </script>
 
